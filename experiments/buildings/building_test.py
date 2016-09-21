@@ -11,20 +11,30 @@ class Building:
         self.name = name
 
 def main():
-    b = genBuilding(1, 0, 0, 0)
     xmlData = writeWorld()
     f = open('test.sdf', 'w')
     f.write(xmlData)
     f.close()
     print 'Done.'
 
-def genBuilding(size, height, x, y):
+def genBuildingMatrix(startX, startY, rows):
     '''
-    Generates a building with the given size, height and position.
+    Generate a square matrix of buildings of the given size
     '''
-    b = Building
-    b.x = 1
-    return b
+    text = ""
+    size = 1
+    height = 3
+    for y in range(rows):
+        for x in range(rows):
+            name = "building_%d_%d" % (x, y)
+            b = Building(name)
+            b.size = size
+            b.height = height
+            b.x = startX + x * size * 1.5
+            b.y = startY + y * size * 1.5
+            text += writeBuilding(b)
+    return text
+
 
 def writeWorld():
     xmlText = '<?xml version="1.0" ?>\n'
@@ -34,12 +44,12 @@ def writeWorld():
     xmlText += writePhysics()
     xmlText += writeSunLight()
     xmlText += writeGroundPlaneModel()
-    xmlText += writeBoxModel("building_1", 0, 0, 0, 1, 1, 3)
+    xmlText += genBuildingMatrix(0, 0, 10)
     xmlText += '  </world>\n</sdf>'
     return xmlText
 
 def writeBuilding(building):
-    pass
+    return writeBoxModel(building.name, building.x, building.y, 0, building.size, building.size, building.height)
 
 def writeScene():
     text = '<scene>\n'
