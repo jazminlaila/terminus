@@ -32,7 +32,9 @@ def writeWorld():
     xmlText += '  <world name="default">\n'
     xmlText += writeScene()
     xmlText += writePhysics()
+    xmlText += writeSunLight()
     xmlText += writeGroundPlaneModel()
+    xmlText += writeBoxModel("building_1", 0, 0, 0, 1, 1, 3)
     xmlText += '  </world>\n</sdf>'
     return xmlText
 
@@ -70,9 +72,9 @@ def writePhysics():
     text += '</include>\n'
     return text
 
-def writeBoxModel(x, y, z, w, l, h):
-    text = "<model name='unit_box_1'>\n"
-    text += "  <pose>1 -1 0.5 0 -0 0</pose>\n"
+def writeBoxModel(name, x, y, z, w, l, h):
+    text = "<model name='%s'>\n" % name
+    text += "  <pose>%f %f %f 0 -0 0</pose>\n" % (x, y, z)
     text += "  <link name='link'>\n"
     text += "    <inertial>\n"
     text += "      <mass>1</mass>\n"
@@ -105,7 +107,7 @@ def writeBoxModel(x, y, z, w, l, h):
     text += "    <visual name='visual'>\n"
     text += "      <geometry>\n"
     text += "        <box>\n"
-    text += "          <size>1 1 1</size>\n"
+    text += "          <size>%f %f %f</size>\n" % (w, l, h)
     text += "        </box>\n"
     text += "      </geometry>\n"
     text += "      <material>\n"
